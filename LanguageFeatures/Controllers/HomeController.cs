@@ -91,5 +91,69 @@ namespace LanguageFeatures.Controllers
 
             return View("Result", (object)String.Format("Cart Total: {0}, Array Total: {1}", cartTotal, arrayTotal));
         }
+
+        public ViewResult UseFilterExtensionMethod()
+        {
+            IEnumerable<Product> products = new ShoppingCart
+            {
+                Products = new List<Product>
+                {
+                    new Product {Name = "Kayak", Price = 275M, Category="Watersports"},
+                    new Product {Name = "Lifejacket", Price = 48.95M, Category="Watersports"},
+                    new Product {Name ="Soccer ball", Price = 19.50M, Category="Soccer"},
+                    new Product {Name = "Corner flag", Price = 34.95M, Category="Soccer"}
+                }
+            };
+
+            //Func<Product, bool> categoryFilter = delegate(Product prod)
+            //{
+            //    return prod.Category == "Soccer";
+            //};
+
+            decimal total = 0;
+            foreach (Product prod in products.FilterByCategory("Soccer"))
+            {
+                total += prod.Price;
+            }
+
+            return View("Result", (object)String.Format("Total: {0}", total));
+        }
+
+
+        public ViewResult UseFilterExtensionMethod(string searchString)
+        {
+            IEnumerable<Product> products = new ShoppingCart
+            {
+                Products = new List<Product>
+                {
+                    new Product {Name = "Kayak", Price = 275M, Category="Watersports"},
+                    new Product {Name = "Lifejacket", Price = 48.95M, Category="Watersports"},
+                    new Product {Name ="Soccer ball", Price = 19.50M, Category="Soccer"},
+                    new Product {Name = "Corner flag", Price = 34.95M, Category="Soccer"}
+                }
+            };
+
+            //Func<Product, bool> categoryFilter = delegate(Product prod)
+            //{
+            //    return prod.Category == searchString;
+            //};
+
+            Func<Product, bool> categoryFilter = prod => prod.Category == searchString;
+
+
+            decimal total = 0;
+            //foreach (Product prod in products.FilterByCategory("Soccer"))
+            //{
+            //    total += prod.Price;
+            //}
+            foreach (Product prod in products.Filter(prod => prod.Category == searchString))
+            {
+                total += prod.Price;
+            }
+
+
+            return View("Result", (object)String.Format("Total: {0}", total));
+        }
+
     }
 }
