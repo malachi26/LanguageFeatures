@@ -137,15 +137,9 @@ namespace LanguageFeatures.Controllers
             //{
             //    return prod.Category == searchString;
             //};
-
             Func<Product, bool> categoryFilter = prod => prod.Category == searchString;
-
-
+            
             decimal total = 0;
-            //foreach (Product prod in products.FilterByCategory("Soccer"))
-            //{
-            //    total += prod.Price;
-            //}
             foreach (Product prod in products.Filter(prod => prod.Category == searchString))
             {
                 total += prod.Price;
